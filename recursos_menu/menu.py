@@ -27,79 +27,117 @@ def cls():
 
 from datetime import datetime
 
+# FUNÇÃO PARA SEPARAR UTILIZANDO LINHAS
+def hr(char, qtdVezes):
+    return print(char * qtdVezes)
+
 # PRIMEIRA TELA DE EXECUÇÃO
 def inicioMenu():
+    cls() # Limpa o menu anterior
+    
     # Mensagem de boas vindas
-    print("Seja bem-vindo!")
-    
+    print("\tSeja bem-vindo!")
+    hr("⎯", 30)
     # Opções principais
-    print("Opções: \n")
-    print("1. Cadastrar alertas")
-    print("2. Alertas atuais")
-    print("3. Histórico de alertas")
-    print("4. Status de operação")
+    print("Opções: ")
+    print("[1] Registrar alertas")
+    print("[2] Exibir alertas")
+    print("[3] Deletar alertas")
+    print("[4] Status de operação")
     
+    hr("⎯", 30)
     # Opção de encerrar
-    print("\n\n0. Encerrar menu")
+    print("[0] Encerrar menu\n")
 
 # Chama a função para iniciar
 inicioMenu()
 
 # Função para voltar menus
 def voltarMenu():
-    print("\n\n")
-    input("0. Voltar para menu inicial")
+    print("[0] Voltar para menu inicial")
     
     inicioMenu()
 
-# Função da opção 1 para REGISTRAR
+# Função para repetir outras funções, ainda não está 100%
+def repetirAcao(nomeAcao, funcaoAcao):
+    
+    # Define opção
+    repetirAcao = input(f"\nDeseja repetir \"{nomeAcao}\"? (S/N) ")
+    opcao = repetirAcao.lower() 
+    
+    # Executa a função novamente
+    if opcao == 's':
+        funcaoAcao()
+    else:
+        inicioMenu()
 
-# SALVAR AQUI: https://awari.com.br/python-como-salvar-um-arquivo-json/
+alertasAtivos = [] # Onde os ALERTAS ATIVOS ficam armazenados
+
+# Função para REGISTRAR ALERTAS e armazenar em @param Array[alertasAtivos] 
 def registrarAlerta():
-        print("Para registrar seu alerta informe as seguintes informações: ")
+        # Opções de data
         data = datetime.now()
+            
+        print("Preencha as informações para registrar um alerta: ")
         
-        # Código para registrar alertas
+        # Variáveis dos objetos
         nomeAlerta = input("Nome: ")
-        
         descricaoAlerta = input("Descrição: ")
         
         objetoAlerta = {
             "nome": nomeAlerta,
             "descricao": descricaoAlerta,
-            "horario_registro": data
         }
         
-        print(f"Seu alerta foi registrado!\nInformações:\n", objetoAlerta)
+        alertasAtivos.append(objetoAlerta)
+        print(f"Seu alerta foi registrado!")
+        
+        repetirAcao("Registrar Alerta", registrarAlerta)
 
-menu_ativo = True # Condição que ativa o menu no loop
+# Função para VISUALIZAR ALERTAS >ATIVOS<
+def exibirAlertas():
+    # Em python, utilizar colchetes [] para buscar por um atributo dentro de objeto Ex: print(alertasAtivos[0]["nome"])
+    for alerta in alertasAtivos:
+        i = 0
+        print(f"Nome: {alerta["nome"]}\nDescrição: {alerta["descricao"]}")
+        print("-" * 30)
+        i =+ 1
+
+# Condição que ativa o menu no loop
+menu_ativo = True 
 
 while (menu_ativo): 
     opcao = int(input())
     
+    ## OPCAO 1 - REGISTRAR ALERTAS
     if opcao == 1:
         cls()
         registrarAlerta()
     
+    ## OPCAO 2 - EXIBIR ALERTAS ATUAIS
     if opcao == 2:
-        # Código que exibe alertas atuais
-        print("Nenhum alerta no momento, operações normais")
-        voltarMenu()
-        
+        cls()
+        if len(alertasAtivos) == 0:
+            print("Nenhum alerta no momento, operações normais")
+            voltarMenu()
+        else:
+            exibirAlertas()
+            
+    ## OPCAO 3 - DELETAR (ou "encerrar" ALERTAS EXIS
     if opcao == 3:
-        # Código que exibe o histórico de alertas
-        print("Não há registros de ocorrência")
-        voltarMenu()
-        
-    if opcao == 4:
-        # Código para verificar operações 
-        print("Todas as operações funcionando")
-        voltarMenu()
-        
+        # para deletar um alerta é necessário ser capaz de identificá-lo (adicionar ID) e movê-lo para uma nova array chamada "alertasExpirados"
+        print("Deletar")
+
     if opcao == 0:
-        confirmar = input("Tem certeza que deseja encerrar o sistema? (S/N)")
-        if (confirmar.lower() == "s"):
+        cls()
+        print("Gostaria de encerrar o sistema? (S/N)")
+        encerrarSistema = input()
+        
+        if (encerrarSistema.lower() == "s"):
             menu_ativo = False
+        else:
+            inicioMenu()
+
 
 # REGISTRAR ALERTAS E CADASTRAR EM UMA VARIÁVEL, SALVANDO APENAS DURANTE A EXECUÇÃO
 
