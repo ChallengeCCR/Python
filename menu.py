@@ -1,14 +1,13 @@
 ## COMENTÁRIOS 
-""" 
-1. MELHORAR AS EXCEÇÕES DE ERRO, COMO POR EXEMPLO NO ITEM 2: AO INSERIR UM TEXTO AO INVÉS DE NÚMERO COMO ID O PROGRAMA CRASHA - RESOLVIDO
 
-2. NÃO PERMITIR QUE O USUÁRIO UTILIZE NOMES "VAZIOS", VER MAIS SOBRE A FUNÇÃO .STRIP 
-"""
+# MELHORARA A MENSAGEM PARA "STRING VAZIA", ADICIONAR INFORMAÇÕES 
 
-import os, sys, time
+# ADICIONAR OPÇÃO PARA CANCELAR OPERAÇÕES, EX: CANCELAR REMOVER
+
+import os
 from datetime import datetime
 
-# Função para "limpar" o console
+# Função para limpar o console
 def cls():
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -31,10 +30,8 @@ def startMenu():
 
 # Função para receber e validar as opções escolhidas
 def getUserOption():  
-    
     # Chama o menu inicial
     startMenu()
-    
     # Validação
     userOption = input()
     
@@ -53,14 +50,15 @@ def verifyInt(inputStr):
         numero = int(inputStr)  
         return numero
     except ValueError:
+        # Mensagem de erro, depois precisa implementar o mesmo loop de verifyBlankString para o usuário tentar novamente
         cls()
         print("O valor fornecido precisa ser do tipo INTEIRO")
         
 # Função para verificar se input é VAZIA ou SÓ TEM ESPAÇOS
 def verifyBlankString(inputName):
+    
     userInput = input(f"{inputName}: ")
     
-    # Verifica se a string é vazia ou tem apenas espaços
     if not userInput.strip():
         cls()
         print(f"O campo \"{inputName}\" não pode ser vazio!")
@@ -68,6 +66,8 @@ def verifyBlankString(inputName):
     else:
         return userInput
 
+
+### LOOP PRINCIPAL, ONDE OS COMANDOS SERÃO RECEBIDOS E EXECUTADOS
 while True: # Verificação das escolhas para executar determinada opção
     cls()
     userOption = getUserOption()
@@ -80,21 +80,26 @@ while True: # Verificação das escolhas para executar determinada opção
         print("# Informe os seguintes dados para registrar")
         print()
         
-        # Recebe as informações e registra o alerta, verifica se elas não são vazias
+        # Informações de registro, ID e hora de registro 
+        alertId = f"{len(activeAlerts)}"
+        alertTimestamp = str(datetime.now()).split('.')[0] # Indica a hora atual e remove os milisegundos 
+    
+        # Informações de registro, Nome e Descrição, são verificadas e não podem ser vazia
         alertName = verifyBlankString("Nome")
         alertDescription = verifyBlankString("Descrição")
         
-        alertId = f"{len(activeAlerts)}"
-        
+        # Objeto que será registrado
         alert = {
             "id": alertId,
+            "timestamp": alertTimestamp,
             "nome": alertName,
             "descricao": alertDescription
         }
+        
         # Adiciona o alerta na Array
         activeAlerts.append(alert)
         
-        # Input para voltar para o menu, qualquer tecla funciona
+        # Input para voltar para o menu
         cls()
         print(f"\nAlerta \"{alertName}\" registrado!")
         print("Pressione ENTER para voltar ao menu inicial.")
@@ -104,17 +109,17 @@ while True: # Verificação das escolhas para executar determinada opção
     ## SEGUNDA OPÇÃO
     elif userOption == "2":  # Remover alertas
         cls()
-        
         # Verifica se há alertas existentes
         if not activeAlerts:
             print("Nenhum alerta ativo.")
         else:
             print("\t### REMOVER ALERTA")
             print()
-            # Lista os alertas
+            # Lista todos os alertas
             for alert in activeAlerts:
                 print(f"ID: {alert["id"]} | {alert["nome"]}")
                 print("_" * 60)
+                print()
             
             print("# Insira o ID do alerta que deseja remover: ")
         
@@ -122,7 +127,7 @@ while True: # Verificação das escolhas para executar determinada opção
             idToRemove = verifyInt(input())
             
             # Verifica se o ID é válido dentro da array e o remove
-            if type(idToRemove) == int:               
+            if type(idToRemove) == int: # TESTAR REMOVER ISSO, ACHO QUE NÃO É NECESSÁRIO !!!          
                 if  0 >= idToRemove < len(activeAlerts): 
                         cls()
                         print(f"\nAlerta \"{activeAlerts[idToRemove]["nome"]}\" removido!")
@@ -140,14 +145,16 @@ while True: # Verificação das escolhas para executar determinada opção
     ## TERCEIRA OPÇÃO
     elif userOption == "3":  # Remover alertas
         cls()
+        # Lista todos os alertas
         if not activeAlerts:
             print("Nenhum alerta ativo.")
         else:
             print("\t### ALERTAS ATIVOS")
             print()
             for alert in activeAlerts:
-                print(f"ID: {alert["id"]}\nNome: {alert["nome"]}\nDescrição: {alert["descricao"]}")
+                print(f"ID: {alert["id"]}\nNome: {alert["nome"]}\nDescrição: {alert["descricao"]}\nTimestamp: {alert["timestamp"]}")
                 print("_" * 60)
+                print()
              
         # Volta ao início do programa
         print()
@@ -161,6 +168,7 @@ while True: # Verificação das escolhas para executar determinada opção
         print("Deseja mesmo encerrar o programa? (S/ N)")
         confirmAction = input()
         
+        # Confirma se realmente deseja sair
         if confirmAction.lower() == "s":  
             cls()
             print("Encerrando...")
