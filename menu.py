@@ -1,178 +1,142 @@
-## COMENTÁRIOS 
-
-# MELHORARA A MENSAGEM PARA "STRING VAZIA", ADICIONAR INFORMAÇÕES 
-
-# ADICIONAR OPÇÃO PARA CANCELAR OPERAÇÕES, EX: CANCELAR REMOVER
-
-import os
-from datetime import datetime
+import os 
 
 # Função para limpar o console
 def cls():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-menuOptions = ["1", "2", "3", "0"] # Opções existentes
-activeAlerts = []  # Lista para armazenar os alertas
+# Declarações 
+menuAtivo = True
+alertasAtivos = []
 
-# Print() - Quebra linha
-# Input() - Está sendo usado para confirmar o retorno ao Menu Inicial
-
-# Função para exibir as opções do menu inicial
-def startMenu():
+while menuAtivo:
+    cls() # clear
+    # Exibe as opções do menu
     print("Escolha uma opção:")
+    print("[A] Registrar alerta")
+    print("[B] Remover alerta")
+    print("[C] Exibir alertas")
     print()
-    print("[1] Registrar alerta")
-    print("[2] Remover alerta")
-    print("[3] Exibir alertas")
+    print("[..] Encerrar programa") 
     print()
-    print("[0] Encerrar programa") 
-    print()
-
-# Função para receber e validar as opções escolhidas
-def getUserOption():  
-    # Chama o menu inicial
-    startMenu()
-    # Validação
-    userOption = input()
     
-    if userOption in menuOptions:
-        return userOption
-    else: 
-        cls()
-        print("\t!!! OPÇÃO INVÁLIDA")
-        print()  
-        return getUserOption()
-
-# Função para verificar se input é um INT
-def verifyInt(inputStr):  
-    try:
-        # Tenta converter a entrada para um número inteiro
-        numero = int(inputStr)  
-        return numero
-    except ValueError:
-        # Mensagem de erro, depois precisa implementar o mesmo loop de verifyBlankString para o usuário tentar novamente
-        cls()
-        print("O valor fornecido precisa ser do tipo INTEIRO")
-        
-# Função para verificar se input é VAZIA ou SÓ TEM ESPAÇOS
-def verifyBlankString(inputName):
+    # Define as opções existentes
+    opcoesMenu = ["a", "b", "c", ".."] 
     
-    userInput = input(f"{inputName}: ")
+    # Escolhe uma opção
+    opcaoUsuario = input().lower()
     
-    if not userInput.strip():
-        cls()
-        print(f"O campo \"{inputName}\" não pode ser vazio!")
-        return verifyBlankString(inputName)  # Executa a função para tentar novamente
-    else:
-        return userInput
-
-
-### LOOP PRINCIPAL, ONDE OS COMANDOS SERÃO RECEBIDOS E EXECUTADOS
-while True: # Verificação das escolhas para executar determinada opção
-    cls()
-    userOption = getUserOption()
-    
-    ## PRIMEIRA OPÇÃO
-    if userOption == "1":  # Registrar alertas
-        cls()
-        print("\t### REGISTRAR ALERTA")
-        print()
-        print("# Informe os seguintes dados para registrar")
-        print()
+    # Verifica se a opção é válida
+    if opcaoUsuario in opcoesMenu:
         
-        # Informações de registro, ID e hora de registro 
-        alertId = f"{len(activeAlerts)}"
-        alertTimestamp = str(datetime.now()).split('.')[0] # Indica a hora atual e remove os milisegundos 
-    
-        # Informações de registro, Nome e Descrição, são verificadas e não podem ser vazia
-        alertName = verifyBlankString("Nome")
-        alertDescription = verifyBlankString("Descrição")
-        
-        # Objeto que será registrado
-        alert = {
-            "id": alertId,
-            "timestamp": alertTimestamp,
-            "nome": alertName,
-            "descricao": alertDescription
-        }
-        
-        # Adiciona o alerta na Array
-        activeAlerts.append(alert)
-        
-        # Input para voltar para o menu
-        cls()
-        print(f"\nAlerta \"{alertName}\" registrado!")
-        print("Pressione ENTER para voltar ao menu inicial.")
-        input()
-        cls()
-        
-    ## SEGUNDA OPÇÃO
-    elif userOption == "2":  # Remover alertas
-        cls()
-        # Verifica se há alertas existentes
-        if not activeAlerts:
-            print("Nenhum alerta ativo.")
-        else:
-            print("\t### REMOVER ALERTA")
+        ## OPÇÃO A - REGISTRAR ALERTAS
+        if opcaoUsuario == "a":
+            cls() # clear
+            print("\t### REGISTRAR ALERTA")
             print()
-            # Lista todos os alertas
-            for alert in activeAlerts:
-                print(f"ID: {alert["id"]} | {alert["nome"]}")
-                print("_" * 60)
-                print()
-            
-            print("# Insira o ID do alerta que deseja remover: ")
-        
-            # Usa a função verifyInt para ver se o valor string pode ser convertido para INT, caso contrário alerta um erro
-            idToRemove = verifyInt(input())
-            
-            # Verifica se o ID é válido dentro da array e o remove
-            if type(idToRemove) == int: # TESTAR REMOVER ISSO, ACHO QUE NÃO É NECESSÁRIO !!!          
-                if  0 >= idToRemove < len(activeAlerts): 
-                        cls()
-                        print(f"\nAlerta \"{activeAlerts[idToRemove]["nome"]}\" removido!")
-                        activeAlerts.pop(idToRemove)
-                else: 
-                    cls()
-                    print("Esse ID não existe!")
-                    
-        # Volta ao início do programa
-        print()
-        print("Pressione ENTER para voltar ao Menu Inicial")
-        input()
-        cls()
-        
-    ## TERCEIRA OPÇÃO
-    elif userOption == "3":  # Remover alertas
-        cls()
-        # Lista todos os alertas
-        if not activeAlerts:
-            print("Nenhum alerta ativo.")
-        else:
-            print("\t### ALERTAS ATIVOS")
+            print("# Informe os seguintes dados para registrar")
             print()
-            for alert in activeAlerts:
-                print(f"ID: {alert["id"]}\nNome: {alert["nome"]}\nDescrição: {alert["descricao"]}\nTimestamp: {alert["timestamp"]}")
-                print("_" * 60)
+            
+            # Dados sobre os alertas
+            alertaNomeInput = input("Nome: ")
+            alertaDescricaoInput = input("Descrição: ")
+            
+            # Verificação se as informações do menu NÃO são vazias
+            if alertaNomeInput.strip() and alertaDescricaoInput.strip():
+                
+                # Objeto de alerta
+                alerta = {
+                "nome": alertaNomeInput,
+                "descricao": alertaDescricaoInput
+                }
+                
+                # Adiciona o alerta na Array
+                alertasAtivos.append(alerta)
+                       
+                # Mensagem de confirmação          
+                cls() # clear        
+                print(f"Alerta \"{alertaNomeInput}\" registrado!")
                 print()
-             
-        # Volta ao início do programa
-        print()
-        print("Pressione ENTER para voltar ao Menu Inicial")
-        input()
-        cls()
-        
-    ## ENCERRAR SISTEMA
-    if userOption == "0":
-        cls()
-        print("Deseja mesmo encerrar o programa? (S/ N)")
-        confirmAction = input()
-        
-        # Confirma se realmente deseja sair
-        if confirmAction.lower() == "s":  
-            cls()
+                print("Pressione qualquer tecla para voltar")
+                input()
+                
+            # Mensagem caso uma das informações 
+            elif not alertaNomeInput.strip() or not alertaDescricaoInput.strip():
+                cls() # clear
+                print("\t!!! Nenhum dos dados podem ser vazios !!!")
+                print("Retorne ao menu e tente novamente")
+                print()
+                print("Pressione qualquer tecla para voltar")
+                input()
+
+        ## OPÇÃO B -- REMOVER ALERTAS
+        if opcaoUsuario == "b":
+            cls() # clear            
+            # Mensagem de erro caso não haja alertas registrados
+            if not alertasAtivos:
+                print("Nenhum alerta ativo.")
+                print()
+            else:
+                print("\t### REMOVER ALERTAS ATIVOS")
+                print()
+                print("_" * 60)
+                # Lista todos os alertas presentes em [alertarAtivos]
+                for i, alerta in enumerate(alertasAtivos):
+                    print()
+                    print(f"ID: {i}\nNome: {alerta["nome"]}\nDescrição: {alerta["descricao"]}")
+                    print("_" * 60)
+                  
+                print()  
+                print("Informe o ID do alerta a ser removido: ")
+            
+                # Try and Except para remover o alerta
+                try:
+                    idParaRemover = int(input())
+                                       
+                    if 0 <= idParaRemover < len(alertasAtivos): 
+                        cls() # clear
+                        print(f"Alerta \"{alertasAtivos[idParaRemover]["nome"]}\" removido!")
+                        del alertasAtivos[idParaRemover]
+                                            
+                # Mensagem de erro caso a input não seja do tipo Int
+                except ValueError:
+                        cls() # clear
+                        print("\t!!! O ID deve ser obrigatoriamente um número INTEIRO !!!")
+                        print("Retorne ao menu e tente novamente")
+                
+            # Volta ao início do programa
+            print()
+            print("Pressione qualquer tecla para voltar")
+            input()
+
+        ## OPÇÃO C -- VISUALIZAR ALERTAS
+        if opcaoUsuario == "c":
+            cls() # clear
+            # Mensagem de erro caso não haja alertas registrados
+            if not alertasAtivos:
+                print("Nenhum alerta ativo.")
+                print()
+                
+            else:
+                print("\t### ALERTAS ATIVOS")
+                print()
+                print("_" * 60)
+                # Lista todos os alertas presentes em [alertarAtivos]
+                for i, alerta in enumerate(alertasAtivos):
+                    print()
+                    print(f"ID: {i}\nNome: {alerta["nome"]}\nDescrição: {alerta["descricao"]}")
+                    print("_" * 60)
+                
+            # Volta ao início do programa
+            print()
+            print("Pressione qualquer tecla para voltar")
+            input()
+
+        ## OPÇÃO .. - ENCERRAR O MENU                
+        if opcaoUsuario == '..':
+            cls() # clear
             print("Encerrando...")
-            cls()
-            exit() 
-
-
+            menuAtivo = False          
+    else:
+        cls() # clear
+        print("\t!!! OPÇÃO INVÁLIDA !!!")
+        print()   
