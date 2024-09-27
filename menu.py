@@ -63,6 +63,7 @@ while menuAtivo:
             elif not alertaNomeInput.strip() or not alertaDescricaoInput.strip():
                 cls() # clear
                 print("\t!!! Nenhum dos dados podem ser vazios !!!")
+                print()
                 print("Retorne ao menu e tente novamente")
                 print()
                 print("Pressione qualquer tecla para voltar")
@@ -101,6 +102,7 @@ while menuAtivo:
                 except ValueError:
                         cls() # clear
                         print("\t!!! O ID deve ser obrigatoriamente um número INTEIRO !!!")
+                        print()
                         print("Retorne ao menu e tente novamente")
                 
             # Volta ao início do programa
