@@ -25,7 +25,7 @@ while menuAtivo:
     # Escolhe uma opção
     opcaoUsuario = input().lower()
     
-    # Verifica se a opção é válida
+    # Verifica se a opção é válida ,caso contrário aponta erro
     if opcaoUsuario in opcoesMenu:
         
         ## OPÇÃO A - REGISTRAR ALERTAS
@@ -40,7 +40,7 @@ while menuAtivo:
             alertaNomeInput = input("Nome: ")
             alertaDescricaoInput = input("Descrição: ")
             
-            # Verificação se as informações do menu NÃO são vazias
+            # Verificação se as informações para preenchimento de NOME e DESCRIÇÃO são válidas
             if alertaNomeInput.strip() and alertaDescricaoInput.strip():
                 
                 # Objeto de alerta
@@ -56,17 +56,17 @@ while menuAtivo:
                 cls() # clear        
                 print(f"Alerta \"{alertaNomeInput}\" registrado!")
                 print()
-                print("Pressione qualquer tecla para voltar")
+                print("Pressione ENTER para voltar")
                 input()
                 
-            # Mensagem caso uma das informações 
+            # Mensagem caso uma das informações seja vazia, "" ou " "
             elif not alertaNomeInput.strip() or not alertaDescricaoInput.strip():
                 cls() # clear
                 print("\t!!! Nenhum dos dados podem ser vazios !!!")
                 print()
                 print("Retorne ao menu e tente novamente")
                 print()
-                print("Pressione qualquer tecla para voltar")
+                print("Pressione ENTER para voltar")
                 input()
 
         ## OPÇÃO B -- REMOVER ALERTAS
@@ -92,12 +92,18 @@ while menuAtivo:
                 # Try and Except para remover o alerta
                 try:
                     idParaRemover = int(input())
-                                       
-                    if 0 <= idParaRemover < len(alertasAtivos): 
+                            
+                    # Verifica se o alerta existe e o remove           
+                    if 0 >= idParaRemover < len(alertasAtivos): 
                         cls() # clear
                         print(f"Alerta \"{alertasAtivos[idParaRemover]["nome"]}\" removido!")
+                        
+                        # Remove o alerta da array
                         del alertasAtivos[idParaRemover]
-                                            
+                      
+                    # Mensagem de erro para ID inválido, inexistente   
+                    else: 
+                        print("Esse alerta não existe!")
                 # Mensagem de erro caso a input não seja do tipo Int
                 except ValueError:
                         cls() # clear
@@ -107,7 +113,7 @@ while menuAtivo:
                 
             # Volta ao início do programa
             print()
-            print("Pressione qualquer tecla para voltar")
+            print("Pressione ENTER para voltar")
             input()
 
         ## OPÇÃO C -- VISUALIZAR ALERTAS
@@ -130,7 +136,7 @@ while menuAtivo:
                 
             # Volta ao início do programa
             print()
-            print("Pressione qualquer tecla para voltar")
+            print("Pressione ENTER para voltar")
             input()
 
         ## OPÇÃO .. - ENCERRAR O MENU                
